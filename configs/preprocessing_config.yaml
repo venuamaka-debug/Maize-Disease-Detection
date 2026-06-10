@@ -1,0 +1,78 @@
+
+project:
+  name: "Maize Leaf Disease Detection System"
+  version: "1.0.0"
+  author: "Enuamaka Victor"
+  seed: 42
+
+data:
+  sources:
+    plantvillage: "data/raw/plantvillage/data"
+    mendeley: "data/raw/mendeley/extracted/Multicrop-Disease-Maiz Disease-Pests and disease"
+
+  processed_output: "data/processed"
+  splits_output: "data/processed/splits"
+
+  classes:
+    plantvillage:
+      - "Blight"
+      - "Common_Rust"
+      - "Gray_Leaf_Spot"
+      - "Healthy"
+    mendeley:
+      - "Maize leaf blight"
+      - "Maize Rust"
+      - "Maize leaf spot"
+      - "Maize healthy"
+
+  class_mapping:
+    "Blight": "Northern_Corn_Leaf_Blight"
+    "Common_Rust": "Common_Rust"
+    "Gray_Leaf_Spot": "Gray_Leaf_Spot"
+    "Healthy": "Healthy"
+    "Maize leaf blight": "Northern_Corn_Leaf_Blight"
+    "Maize Rust": "Common_Rust"
+    "Maize leaf spot": "Gray_Leaf_Spot"
+    "Maize healthy": "Healthy"
+
+image:
+  target_size: [224, 224]
+  channels: 3
+  color_mode: "rgb"
+  valid_extensions: [".jpg", ".jpeg", ".png", ".JPG", ".JPEG", ".PNG"]
+
+splitting:
+  train_ratio: 0.70
+  val_ratio: 0.15
+  test_ratio: 0.15
+  random_seed: 42
+  stratified: true
+
+augmentation:
+  enabled: true
+  horizontal_flip: true
+  vertical_flip: false
+  rotation_range: 15
+  zoom_range: 0.10
+  width_shift_range: 0.10
+  height_shift_range: 0.10
+  brightness_range: [0.8, 1.2]
+  fill_mode: "nearest"
+
+preprocessing:
+  normalize: true
+  batch_size: 32
+  shuffle_buffer: 1000
+
+validation:
+  min_images_per_class: 100
+  max_corrupted_ratio: 0.05
+  warn_imbalance_ratio: 2.0
+
+logging:
+  level: "INFO"
+  output_dir: "logs/preprocessing"
+  format: "%(asctime)s | %(levelname)-8s | %(name)s | %(message)s"
+  date_format: "%Y-%m-%d %H:%M:%S"
+  log_to_console: true
+  log_to_file: trues
