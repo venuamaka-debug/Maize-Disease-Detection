@@ -17,3 +17,7 @@ data/processed/Healthy/
 # Processed images - all subdirectories
 data/processed/*/
 data/processed/**
+data/processed/Northern_Corn_Leaf_Blight
+data/processed/Common_Rust
+data/processed/Gray_Leaf_Spot
+data/processed/Healthy
