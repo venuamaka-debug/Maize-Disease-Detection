@@ -94,18 +94,27 @@ class MobileNetV2Model:
         self.base_model = MobileNetV2(
             include_top=False,
             weights="imagenet",
-            input_tensor=inputs,
+            input_shape=(*self.image_size, 3),
             pooling=None
         )
 
         # ── Freeze Base Model ─────────────────────────────────
         freeze_base_model(self.base_model)
 
+        # ── Connect Base Model to Inputs ─────────────────────
+        # training=False forces BatchNorm layers to always use
+        # their pre-trained ImageNet moving statistics, even
+        # though the outer model is in training mode during
+        # model.fit(). Without this, BatchNorm recalculates
+        # statistics from our small maize batches every step,
+        # corrupting the pre-trained feature representations.
+        base_output = self.base_model(inputs, training=False)
+
         # ── Attach Classification Head ───────────────────────
         # Identical head architecture as ResNet50 — ensures
         # the comparison isolates backbone differences only
         outputs = build_classification_head(
-            base_output=self.base_model.output,
+            base_output=base_output,
             num_classes=self.num_classes,
             dense_units=self.training_config["dense_units"],
             dropout_rate=self.training_config["dropout_rate"]

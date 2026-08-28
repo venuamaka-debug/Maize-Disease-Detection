@@ -84,23 +84,33 @@ class ResNet50Model:
             name="input_image"
         )
 
-        # ── Load Pre-trained ResNet50 ────────────────────────
-        # include_top=False removes ImageNet's 1000-class
-        # output layer — we replace it with our own 4-class head
-        # weights="imagenet" loads pre-trained knowledge
+                # ── Load Pre-trained ResNet50 (standalone) ───────────
+        # Built WITHOUT input_tensor so we can explicitly call
+        # it later with training=False — this is critical for
+        # BatchNorm layers to use frozen ImageNet statistics
+        # rather than recomputing stats from our small batches.
         self.base_model = ResNet50(
             include_top=False,
             weights="imagenet",
-            input_tensor=inputs,
+            input_shape=(*self.image_size, 3),
             pooling=None
         )
 
         # ── Freeze Base Model ─────────────────────────────────
         freeze_base_model(self.base_model)
 
+        # ── Connect Base Model to Inputs ─────────────────────
+        # training=False forces BatchNorm layers to always use
+        # their pre-trained ImageNet moving statistics, even
+        # though the outer model is in training mode during
+        # model.fit(). Without this, BatchNorm recalculates
+        # statistics from our small maize batches every step,
+        # corrupting the pre-trained feature representations.
+        base_output = self.base_model(inputs, training=False)
+
         # ── Attach Classification Head ───────────────────────
         outputs = build_classification_head(
-            base_output=self.base_model.output,
+            base_output=base_output,
             num_classes=self.num_classes,
             dense_units=self.training_config["dense_units"],
             dropout_rate=self.training_config["dropout_rate"]
