@@ -67,14 +67,6 @@ class ResNet50Model:
     def build_phase_a(self) -> tf.keras.Model:
         """
         Build ResNet50 for Phase A — feature extraction.
-
-        The entire ResNet50 base is frozen. Only the new
-        classification head is trainable. This stabilizes
-        the head before any fine-tuning of pre-trained
-        weights happens in Phase B.
-
-        Returns:
-            Compiled Keras model ready for Phase A training
         """
         logger.info("Building ResNet50 — Phase A (frozen base)")
 
@@ -84,11 +76,18 @@ class ResNet50Model:
             name="input_image"
         )
 
-                # ── Load Pre-trained ResNet50 (standalone) ───────────
-        # Built WITHOUT input_tensor so we can explicitly call
-        # it later with training=False — this is critical for
-        # BatchNorm layers to use frozen ImageNet statistics
-        # rather than recomputing stats from our small batches.
+        # ── ResNet50-specific preprocessing ──────────────────
+        # Data pipeline normalizes to [0,1]; ResNet50's ImageNet
+        # weights expect Caffe-style preprocessing (BGR, mean-
+        # subtracted). Without this, the frozen backbone receives
+        # out-of-distribution input.
+        x = tf.keras.layers.Rescaling(255.0, name="undo_pipeline_norm")(inputs)
+        x = tf.keras.layers.Lambda(
+            tf.keras.applications.resnet50.preprocess_input,
+            name="resnet50_preprocess"
+        )(x)
+
+        # ── Load Pre-trained ResNet50 (standalone) ───────────
         self.base_model = ResNet50(
             include_top=False,
             weights="imagenet",
@@ -100,13 +99,7 @@ class ResNet50Model:
         freeze_base_model(self.base_model)
 
         # ── Connect Base Model to Inputs ─────────────────────
-        # training=False forces BatchNorm layers to always use
-        # their pre-trained ImageNet moving statistics, even
-        # though the outer model is in training mode during
-        # model.fit(). Without this, BatchNorm recalculates
-        # statistics from our small maize batches every step,
-        # corrupting the pre-trained feature representations.
-        base_output = self.base_model(inputs, training=False)
+        base_output = self.base_model(x, training=False)
 
         # ── Attach Classification Head ───────────────────────
         outputs = build_classification_head(
