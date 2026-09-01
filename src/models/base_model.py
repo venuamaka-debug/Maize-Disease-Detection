@@ -97,7 +97,8 @@ def compile_model(
     """
     if optimizer_name.lower() == "adam":
         optimizer = tf.keras.optimizers.Adam(
-            learning_rate=learning_rate
+            learning_rate=learning_rate,
+            clipnorm=1.0
         )
     else:
         optimizer = tf.keras.optimizers.SGD(
