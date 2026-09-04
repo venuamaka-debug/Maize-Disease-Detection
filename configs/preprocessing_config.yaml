@@ -90,7 +90,7 @@ training:
   # Phase B — Fine Tuning (partial unfreeze)
   phase_b:
     epochs: 30
-    learning_rate: 0.0001
+    learning_rate: 0.00001
     unfreeze_layers: 30
     optimizer: "adam"
 
