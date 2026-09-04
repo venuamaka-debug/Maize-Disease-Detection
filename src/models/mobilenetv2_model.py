@@ -87,10 +87,17 @@ class MobileNetV2Model:
             name="input_image"
         )
 
+        # ── MobileNetV2-specific preprocessing ──────────────
+        # Data pipeline normalizes to [0,1]; MobileNetV2's ImageNet
+        # weights expect input scaled to [-1,1]. Without this, the
+        # frozen backbone receives out-of-distribution input.
+        x = tf.keras.layers.Rescaling(255.0, name="undo_pipeline_norm")(inputs)
+        x = tf.keras.layers.Lambda(
+            tf.keras.applications.mobilenet_v2.preprocess_input,
+            name="mobilenet_preprocess"
+        )(x)
+
         # ── Load Pre-trained MobileNetV2 ─────────────────────
-        # include_top=False removes ImageNet's 1000-class
-        # output layer — we replace it with our own 4-class head
-        # weights="imagenet" loads pre-trained knowledge
         self.base_model = MobileNetV2(
             include_top=False,
             weights="imagenet",
@@ -102,13 +109,7 @@ class MobileNetV2Model:
         freeze_base_model(self.base_model)
 
         # ── Connect Base Model to Inputs ─────────────────────
-        # training=False forces BatchNorm layers to always use
-        # their pre-trained ImageNet moving statistics, even
-        # though the outer model is in training mode during
-        # model.fit(). Without this, BatchNorm recalculates
-        # statistics from our small maize batches every step,
-        # corrupting the pre-trained feature representations.
-        base_output = self.base_model(inputs, training=False)
+        base_output = self.base_model(x, training=False)
 
         # ── Attach Classification Head ───────────────────────
         # Identical head architecture as ResNet50 — ensures

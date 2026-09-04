@@ -91,11 +91,11 @@ training:
   phase_b:
     epochs: 30
     learning_rate: 0.00001
-    unfreeze_layers: 30
+    unfreeze_layers: 15
     optimizer: "adam"
 
   # Callbacks
-  early_stopping_patience: 10
+  early_stopping_patience: 15
   reduce_lr_patience: 5
   reduce_lr_factor: 0.5
   monitor_metric: "val_accuracy"
@@ -104,5 +104,5 @@ training:
   experiments_dir: "/content/drive/MyDrive/Maize disease detection/experiments"
 
   # Model settings
-  dropout_rate: 0.5
+  dropout_rate: 0.6
   dense_units: 256
