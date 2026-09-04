@@ -177,7 +177,8 @@ class DataAugmentor:
             delta = (brightness[1] - brightness[0]) / 2
             layers.append(
                 tf.keras.layers.RandomBrightness(
-                    factor=delta
+                    factor=delta,
+                    value_range=(0.0, 1.0)
                 )
             )
             logger.info(

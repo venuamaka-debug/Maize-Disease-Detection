@@ -101,7 +101,7 @@ training:
   monitor_metric: "val_accuracy"
 
   # Experiment organization
-  experiments_dir: "experiments"
+  experiments_dir: "/content/drive/MyDrive/Maize disease detection/experiments"
 
   # Model settings
   dropout_rate: 0.5
