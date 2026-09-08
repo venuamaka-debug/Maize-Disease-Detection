@@ -158,15 +158,27 @@ class DatasetSplitter:
             val_imgs = shuffled[train_end:val_end]
             test_imgs = shuffled[val_end:]
 
-            # Add to manifest as (path, class) tuples
+            # Add to manifest as (path, class) tuples.
+            # Paths are stored RELATIVE to processed_dir so the
+            # manifest is portable across machines (e.g. Kaggle),
+            # where the absolute project path will differ.
             manifest.train.extend(
-                [(str(p), class_name) for p in train_imgs]
+                [
+                    (str(p.relative_to(self.processed_dir)), class_name)
+                    for p in train_imgs
+                ]
             )
             manifest.val.extend(
-                [(str(p), class_name) for p in val_imgs]
+                [
+                    (str(p.relative_to(self.processed_dir)), class_name)
+                    for p in val_imgs
+                ]
             )
             manifest.test.extend(
-                [(str(p), class_name) for p in test_imgs]
+                [
+                    (str(p.relative_to(self.processed_dir)), class_name)
+                    for p in test_imgs
+                ]
             )
 
             logger.info(

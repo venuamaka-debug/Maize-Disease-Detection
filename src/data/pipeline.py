@@ -284,7 +284,13 @@ class DataPipeline:
             Optimized tf.data.Dataset
         """
         # Separate paths and labels
-        paths = [r[0] for r in records]
+        # Manifest CSVs store paths RELATIVE to processed_output
+        # (portable across machines/Kaggle) — resolve to absolute
+        # here, once, before building the tf.data pipeline.
+        paths = [
+            str(self.settings.processed_output / r[0])
+            for r in records
+        ]
         labels = [
             class_names.index(r[1]) for r in records
         ]
