@@ -162,9 +162,26 @@ class MobileNetV2Model:
             "Converting MobileNetV2 — Phase A → Phase B"
         )
 
+        # ── Locate the base model INSIDE phase_a_model ────────
+        # self.base_model is a stale reference after a checkpoint
+        # reload creates a new Model object — must find the base
+        # model nested inside the model actually passed in here.
+        base_model_layer = None
+        for layer in phase_a_model.layers:
+            if isinstance(layer, tf.keras.Model):
+                base_model_layer = layer
+                break
+
+        if base_model_layer is None:
+            raise RuntimeError(
+                "Could not locate the nested MobileNetV2 base "
+                "model inside phase_a_model — check model "
+                "architecture."
+            )
+
         # ── Unfreeze Top Layers ───────────────────────────────
         unfreeze_top_layers(
-            self.base_model,
+            base_model_layer,
             num_layers=self.training_config["unfreeze_layers"]
         )
 
