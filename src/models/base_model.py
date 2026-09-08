@@ -95,6 +95,12 @@ def unfreeze_top_layers(
     for layer in base_model.layers[:layers_to_freeze]:
         layer.trainable = False
 
+    bn_frozen_count = 0
+    for layer in base_model.layers:
+        if isinstance(layer, tf.keras.layers.BatchNormalization):
+            layer.trainable = False
+            bn_frozen_count += 1
+
     trainable = sum(
         1 for l in base_model.layers if l.trainable
     )
@@ -103,7 +109,8 @@ def unfreeze_top_layers(
     logger.info(
         f"Fine-tuning enabled — "
         f"{trainable} layers unfrozen, "
-        f"{frozen} layers frozen"
+        f"{frozen} layers frozen "
+        f"({bn_frozen_count} BatchNorm layers kept frozen)"
     )
 
 
