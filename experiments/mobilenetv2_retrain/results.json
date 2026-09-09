@@ -1,0 +1,75 @@
+{
+  "model_name": "mobilenetv2",
+  "test_accuracy": 0.843329886246122,
+  "macro_precision": 0.8266533145484222,
+  "macro_recall": 0.7520920704659199,
+  "macro_f1": 0.7318312906884421,
+  "inference_time_ms": 12.295368538770706,
+  "model_size_mb": 10.224601745605469,
+  "total_parameters": 2586948,
+  "per_class_metrics": {
+    "Northern_Corn_Leaf_Blight": {
+      "precision": 0.9545454545454546,
+      "recall": 0.26666666666666666,
+      "f1_score": 0.41687344913151364,
+      "support": 315
+    },
+    "Common_Rust": {
+      "precision": 0.9618768328445748,
+      "recall": 0.9805680119581465,
+      "f1_score": 0.9711324944485566,
+      "support": 669
+    },
+    "Gray_Leaf_Spot": {
+      "precision": 0.4688279301745636,
+      "recall": 0.7611336032388664,
+      "f1_score": 0.5802469135802469,
+      "support": 247
+    },
+    "Healthy": {
+      "precision": 0.9213630406290957,
+      "recall": 1.0,
+      "f1_score": 0.9590723055934516,
+      "support": 703
+    }
+  },
+  "classification_report": {
+    "Northern_Corn_Leaf_Blight": {
+      "precision": 0.9545454545454546,
+      "recall": 0.26666666666666666,
+      "f1-score": 0.41687344913151364,
+      "support": 315.0
+    },
+    "Common_Rust": {
+      "precision": 0.9618768328445748,
+      "recall": 0.9805680119581465,
+      "f1-score": 0.9711324944485566,
+      "support": 669.0
+    },
+    "Gray_Leaf_Spot": {
+      "precision": 0.4688279301745636,
+      "recall": 0.7611336032388664,
+      "f1-score": 0.5802469135802469,
+      "support": 247.0
+    },
+    "Healthy": {
+      "precision": 0.9213630406290957,
+      "recall": 1.0,
+      "f1-score": 0.9590723055934516,
+      "support": 703.0
+    },
+    "accuracy": 0.843329886246122,
+    "macro avg": {
+      "precision": 0.8266533145484222,
+      "recall": 0.7520920704659199,
+      "f1-score": 0.7318312906884421,
+      "support": 1934.0
+    },
+    "weighted avg": {
+      "precision": 0.8829866265099329,
+      "recall": 0.843329886246122,
+      "f1-score": 0.8265520133138721,
+      "support": 1934.0
+    }
+  }
+}
