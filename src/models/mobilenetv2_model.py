@@ -180,9 +180,20 @@ class MobileNetV2Model:
             )
 
         # ── Unfreeze Top Layers ───────────────────────────────
+        # Architecture-specific override: MobileNetV2's frozen features
+        # underperformed ResNet50's in Phase A (80.3% vs 86.7% val acc),
+        # and needed far more unfrozen capacity to develop distinct
+        # per-class features (confusion matrix showed Blight recall
+        # collapsing to 0.102 with the shared unfreeze_layers=15).
+        unfreeze_count = self.settings.get(
+            "training.mobilenetv2_phase_b.unfreeze_layers",
+            self.training_config["unfreeze_layers"]
+        )
+        logger.info(f"Using unfreeze_layers={unfreeze_count} for MobileNetV2 Phase B")
+
         unfreeze_top_layers(
             base_model_layer,
-            num_layers=self.training_config["unfreeze_layers"]
+            num_layers=unfreeze_count
         )
 
         # ── Recompile with Smaller Learning Rate ──────────────

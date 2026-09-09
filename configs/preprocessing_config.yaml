@@ -94,6 +94,10 @@ training:
     unfreeze_layers: 15
     optimizer: "adam"
 
+  # Architecture-specific override for MobileNetV2 (see mobilenetv2_model.py)
+  mobilenetv2_phase_b:
+    unfreeze_layers: 45
+
   # Callbacks
   early_stopping_patience: 15
   reduce_lr_patience: 5
