@@ -1,0 +1,75 @@
+{
+  "model_name": "resnet50",
+  "test_accuracy": 0.9177869700103413,
+  "macro_precision": 0.8740856346565856,
+  "macro_recall": 0.8610568709577442,
+  "macro_f1": 0.8669771783366237,
+  "inference_time_ms": 10.326199595659446,
+  "model_size_mb": 92.36487579345703,
+  "total_parameters": 24113284,
+  "per_class_metrics": {
+    "Northern_Corn_Leaf_Blight": {
+      "precision": 0.8442906574394463,
+      "recall": 0.7746031746031746,
+      "f1_score": 0.8079470198675497,
+      "support": 315
+    },
+    "Common_Rust": {
+      "precision": 0.9793510324483776,
+      "recall": 0.992526158445441,
+      "f1_score": 0.985894580549369,
+      "support": 669
+    },
+    "Gray_Leaf_Spot": {
+      "precision": 0.7191489361702128,
+      "recall": 0.6842105263157895,
+      "f1_score": 0.7012448132780082,
+      "support": 247
+    },
+    "Healthy": {
+      "precision": 0.953551912568306,
+      "recall": 0.9928876244665719,
+      "f1_score": 0.972822299651568,
+      "support": 703
+    }
+  },
+  "classification_report": {
+    "Northern_Corn_Leaf_Blight": {
+      "precision": 0.8442906574394463,
+      "recall": 0.7746031746031746,
+      "f1-score": 0.8079470198675497,
+      "support": 315.0
+    },
+    "Common_Rust": {
+      "precision": 0.9793510324483776,
+      "recall": 0.992526158445441,
+      "f1-score": 0.985894580549369,
+      "support": 669.0
+    },
+    "Gray_Leaf_Spot": {
+      "precision": 0.7191489361702128,
+      "recall": 0.6842105263157895,
+      "f1-score": 0.7012448132780082,
+      "support": 247.0
+    },
+    "Healthy": {
+      "precision": 0.953551912568306,
+      "recall": 0.9928876244665719,
+      "f1-score": 0.972822299651568,
+      "support": 703.0
+    },
+    "accuracy": 0.9177869700103413,
+    "macro avg": {
+      "precision": 0.8740856346565856,
+      "recall": 0.8610568709577442,
+      "f1-score": 0.8669771783366237,
+      "support": 1934.0
+    },
+    "weighted avg": {
+      "precision": 0.9147436295609886,
+      "recall": 0.9177869700103413,
+      "f1-score": 0.9158057555225059,
+      "support": 1934.0
+    }
+  }
+}

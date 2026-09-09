@@ -1,0 +1,75 @@
+{
+  "model_name": "mobilenetv2",
+  "test_accuracy": 0.8024819027921406,
+  "macro_precision": 0.8032106257852293,
+  "macro_recall": 0.6854277282882428,
+  "macro_f1": 0.6456564631533149,
+  "inference_time_ms": 11.912598604993219,
+  "model_size_mb": 10.223960876464844,
+  "total_parameters": 2586948,
+  "per_class_metrics": {
+    "Northern_Corn_Leaf_Blight": {
+      "precision": 1.0,
+      "recall": 0.10158730158730159,
+      "f1_score": 0.1844380403458213,
+      "support": 315
+    },
+    "Common_Rust": {
+      "precision": 0.8731642189586115,
+      "recall": 0.9775784753363229,
+      "f1_score": 0.922425952045134,
+      "support": 669
+    },
+    "Gray_Leaf_Spot": {
+      "precision": 0.43967828418230565,
+      "recall": 0.6639676113360324,
+      "f1_score": 0.5290322580645161,
+      "support": 247
+    },
+    "Healthy": {
+      "precision": 0.9,
+      "recall": 0.9985775248933144,
+      "f1_score": 0.9467296021577882,
+      "support": 703
+    }
+  },
+  "classification_report": {
+    "Northern_Corn_Leaf_Blight": {
+      "precision": 1.0,
+      "recall": 0.10158730158730159,
+      "f1-score": 0.1844380403458213,
+      "support": 315.0
+    },
+    "Common_Rust": {
+      "precision": 0.8731642189586115,
+      "recall": 0.9775784753363229,
+      "f1-score": 0.922425952045134,
+      "support": 669.0
+    },
+    "Gray_Leaf_Spot": {
+      "precision": 0.43967828418230565,
+      "recall": 0.6639676113360324,
+      "f1-score": 0.5290322580645161,
+      "support": 247.0
+    },
+    "Healthy": {
+      "precision": 0.9,
+      "recall": 0.9985775248933144,
+      "f1-score": 0.9467296021577882,
+      "support": 703.0
+    },
+    "accuracy": 0.8024819027921406,
+    "macro avg": {
+      "precision": 0.8032106257852293,
+      "recall": 0.6854277282882428,
+      "f1-score": 0.6456564631533149,
+      "support": 1934.0
+    },
+    "weighted avg": {
+      "precision": 0.8482147873197211,
+      "recall": 0.8024819027921406,
+      "f1-score": 0.7608184191757958,
+      "support": 1934.0
+    }
+  }
+}
