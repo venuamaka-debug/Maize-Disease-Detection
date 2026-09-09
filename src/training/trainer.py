@@ -33,6 +33,14 @@ from src.training.metrics import (
 
 logger = get_logger(__name__)
 
+# H5 legacy format only saves the NAME of functions wrapped in Lambda
+# layers, not the function itself — Keras can't resolve "preprocess_input"
+# on reload without being told explicitly which one it is.
+PREPROCESS_FUNCTIONS = {
+    "resnet50": tf.keras.applications.resnet50.preprocess_input,
+    "mobilenetv2": tf.keras.applications.mobilenet_v2.preprocess_input,
+}
+
 
 class ModelTrainer:
     """
@@ -175,7 +183,8 @@ class ModelTrainer:
             )
             model = tf.keras.models.load_model(
                 str(phase_a_checkpoint),
-                safe_mode=False
+                safe_mode=False,
+                custom_objects={"preprocess_input": PREPROCESS_FUNCTIONS[model_name]}
             )
         else:
             logger.warning(
@@ -230,7 +239,8 @@ class ModelTrainer:
             )
             model = tf.keras.models.load_model(
                 str(phase_b_checkpoint),
-                safe_mode=False
+                safe_mode=False,
+                custom_objects={"preprocess_input": PREPROCESS_FUNCTIONS[model_name]}
             )
         else:
             logger.warning(
