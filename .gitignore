@@ -22,3 +22,11 @@ data/processed/Common_Rust
 data/processed/Gray_Leaf_Spot
 data/processed/Healthy
 *.zip
+
+# Production model artifact (singular "model/" — separate from "models/")
+model/
+model/*.h5
+
+# Kaggle experiment outputs — checkpoints, logs, per-run artifacts
+experiments_kaggle/
+experiments/
