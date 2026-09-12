@@ -1,3 +1,31 @@
 <!DOCTYPE html>
-<html><head><title>About</title></head>
-<body><h1>About</h1><p>Placeholder — Step 6.</p></body></html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — Maize Leaf Disease Detection</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <h1>Maize Leaf Disease Detection</h1>
+    <nav>
+      <a href="/">Detect</a>
+      <a href="/about">About</a>
+    </nav>
+  </header>
+
+  <main class="layout" style="grid-template-columns: 1fr; max-width: 720px;">
+    <section>
+      <h2>About this system</h2>
+      <p>This tool classifies photographs of maize leaves into one of four categories using a convolutional neural network trained on labelled leaf images: Northern Corn Leaf Blight, Common Rust, Gray Leaf Spot, and Healthy.</p>
+
+      <h3>How to use it</h3>
+      <p>Upload a clear, well-lit photo of a single leaf. The system works best when the leaf fills most of the frame and shows the affected area clearly.</p>
+
+      <h3>Limitations</h3>
+      <p>This is a classification aid, not a diagnostic authority. Results below the confidence threshold are flagged as inconclusive rather than shown as definitive. For agronomic decisions, consult a qualified expert.</p>
+    </section>
+  </main>
+</body>
+</html>

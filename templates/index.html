@@ -1,5 +1,84 @@
 <!DOCTYPE html>
-<html><head><title>Maize Disease Detection</title></head>
-<body><h1>Maize Leaf Disease Detection</h1>
-<p>Upload form goes here — placeholder for Step 6.</p>
-</body></html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maize Leaf Disease Detection</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <div>
+      <h1>Maize Leaf Disease Detection</h1>
+      <span class="tagline">A field reference for four leaf conditions</span>
+    </div>
+    <nav>
+      <a href="/">Detect</a>
+      <a href="/about">About</a>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <section class="panel-intro">
+      <p>Upload a photo of a maize leaf to check for Northern Corn Leaf Blight, Common Rust, and Gray Leaf Spot.</p>
+
+      <ul class="spec-list">
+        <li><span>Formats</span><span>JPG, JPEG, PNG</span></li>
+        <li><span>Max size</span><span>8 MB</span></li>
+        <li><span>Conditions checked</span><span>4</span></li>
+      </ul>
+
+      <div class="dropzone" id="dropzone">
+        <strong>Upload a leaf image</strong>
+        <p>Click to browse, or drag an image here</p>
+        <input type="file" id="fileInput" accept="image/jpeg,image/png">
+      </div>
+
+      <div class="preview-wrap" id="previewWrap">
+        <img id="previewImg" alt="Selected leaf preview">
+      </div>
+
+      <div class="error-msg" id="errorMsg"></div>
+
+      <button class="analyze" id="analyzeBtn" disabled>Analyze</button>
+    </section>
+
+    <section class="result-area">
+      <div class="result-placeholder" id="resultPlaceholder">
+        Results will appear here once you analyze a leaf image.
+      </div>
+
+      <div class="result-card" id="resultCard">
+        <div class="specimen-plate">
+          <img id="resultUploadedImg" alt="Analyzed leaf">
+          <div class="specimen-caption">
+            <span class="mono-label">SAMPLE — 224×224</span>
+            <span class="mono-label" id="specimenTimestamp"></span>
+          </div>
+        </div>
+
+        <div class="diagnosis-row">
+          <span class="diagnosis-badge" id="diagnosisBadge"></span>
+        </div>
+
+        <div class="confidence-meter">
+          <div class="confidence-track">
+            <div class="confidence-fill" id="confidenceFill"></div>
+          </div>
+          <div class="confidence-ticks">
+            <span>0</span><span>25</span><span>50</span><span>75</span><span>100</span>
+          </div>
+          <div class="confidence-readout" id="confidenceReadout"></div>
+        </div>
+
+        <div class="inconclusive-note" id="inconclusiveNote"></div>
+        <p class="interpretation" id="interpretation"></p>
+
+        <button class="reanalyze" id="reanalyzeBtn">Analyze another image</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
