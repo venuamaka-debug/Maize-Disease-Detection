@@ -150,6 +150,7 @@ function displayResult(data, imgSrc) {
   resetResultPanels();
 
   if (data.status === "no_match") {
+    resultSection.style.setProperty("--result-accent", "var(--line-strong)");
     resultClass.className = "no-match";
     resultClass.textContent = "No match found";
     resultStatus.textContent = "This doesn't appear to be a maize leaf";
@@ -167,6 +168,7 @@ function displayResult(data, imgSrc) {
   gaugeRow.style.display = "flex";
 
   if (data.status === "unrecognised") {
+    resultSection.style.setProperty("--result-accent", "var(--amber)");
     resultClass.className = "unrecognised";
     resultClass.textContent = "Unrecognised";
     resultStatus.textContent = "Leaf detected, but condition unclear";
@@ -178,6 +180,7 @@ function displayResult(data, imgSrc) {
     inconclusiveNote.classList.add("active");
     inconclusiveNote.textContent = "This looks like a leaf, but the model isn't confident enough to name a condition. Try retaking the photo with better lighting, closer framing, or a plainer background.";
   } else {
+    resultSection.style.setProperty("--result-accent", isHealthy ? "var(--leaf)" : "var(--clay)");
     resultClass.className = isHealthy ? "healthy" : "disease";
     resultClass.textContent = info.label;
     resultStatus.textContent = isHealthy ? "No condition detected" : "Condition detected";

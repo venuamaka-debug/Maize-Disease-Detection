@@ -32,12 +32,17 @@ body {
   font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.55;
-  background-color: var(--bg);
+  min-height: 100vh;
+  background-color: #DEE3CE;
   background-image:
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/></svg>"),
-    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(53,86,58,0.05), transparent),
-    radial-gradient(ellipse 900px 600px at 100% 100%, rgba(168,90,60,0.04), transparent);
-  background-attachment: fixed;
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='500' height='500'><filter id='b1'><feGaussianBlur stdDeviation='28'/></filter><ellipse cx='120' cy='120' rx='150' ry='95' fill='%2335563A' opacity='0.20' filter='url(%23b1)' transform='rotate(-35 120 120)'/></svg>"),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='500' height='500'><filter id='b2'><feGaussianBlur stdDeviation='30'/></filter><ellipse cx='380' cy='380' rx='160' ry='100' fill='%23A85A3C' opacity='0.16' filter='url(%23b2)' transform='rotate(-35 380 380)'/></svg>"),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='500' height='500'><filter id='b3'><feGaussianBlur stdDeviation='24'/></filter><ellipse cx='250' cy='60' rx='100' ry='60' fill='%2335563A' opacity='0.10' filter='url(%23b3)' transform='rotate(20 250 60)'/></svg>"),
+    linear-gradient(150deg, #D8E1C7 0%, #E9E7D8 50%, #F1EBDD 100%);
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+  background-position: -80px -80px, calc(100% + 80px) calc(100% + 80px), 60% -40px, 0 0;
+  background-size: 560px 560px, 600px 600px, 400px 400px, 100% 100%;
+  background-attachment: fixed, fixed, fixed, fixed;
 }
 h1, h2, h3 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em; margin: 0; color: var(--ink); }
 p { margin: 0; }
@@ -141,7 +146,7 @@ a { color: var(--leaf-dark); }
   margin-top: var(--sp-4);
   background: var(--surface);
   border: 1px solid var(--line);
-  border-top: 3px solid var(--clay);
+  border-top: 4px solid var(--result-accent, var(--line-strong));
   border-radius: var(--radius);
   box-shadow: 0 4px 16px rgba(31,42,28,0.07), 0 1px 2px rgba(31,42,28,0.05);
   padding: var(--sp-4);
@@ -157,7 +162,7 @@ a { color: var(--leaf-dark); }
 .result-header-row { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--sp-2); flex-wrap: wrap; }
 .reanalyze-top { margin-top: 0; flex-shrink: 0; }
 .result-status { display: block; font-size: 0.8rem; color: var(--ink-soft); margin-bottom: 0.2rem; }
-.result-body h2 { font-size: 1.5rem; }
+.result-body h2 { font-size: 1.65rem; font-weight: 800; }
 .result-body h2.disease { color: var(--clay); }
 .result-body h2.healthy { color: var(--leaf-dark); }
 .result-body h2.unrecognised { color: var(--amber); }
