@@ -22,7 +22,7 @@ const observedPattern = document.getElementById("observedPattern");
 const fieldGuidance = document.getElementById("fieldGuidance");
 const inconclusiveNote = document.getElementById("inconclusiveNote");
 const noMatchNote = document.getElementById("noMatchNote");
-const reanalyzeBtn = document.getElementById("reanalyzeBtn");
+const reanalyzeBtn = document.getElementById("reanalyzeBtnTop");
 
 let selectedFile = null;
 
@@ -154,7 +154,7 @@ function displayResult(data, imgSrc) {
     resultClass.textContent = "No match found";
     resultStatus.textContent = "This doesn't appear to be a maize leaf";
     noMatchNote.classList.add("active");
-    noMatchNote.textContent = "The image doesn't resemble a maize leaf closely enough to analyze. Try a clear, well-lit photo of a single leaf.";
+    noMatchNote.textContent = "We couldn't confidently identify this as a maize leaf. Try uploading a clearer, well-lit photo of a single leaf.";
     resultSection.hidden = false;
     resultSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
     return;
@@ -162,7 +162,7 @@ function displayResult(data, imgSrc) {
 
   const isHealthy = data.predicted_class === "Healthy";
   const info = CONTENT[data.predicted_class] || { label: data.predicted_class, pattern: "", guidance: "" };
-  const pct = Math.round(data.confidence * 100);
+  const pct = Math.min(99, Math.round(data.confidence * 100));
 
   gaugeRow.style.display = "flex";
 
