@@ -8,23 +8,40 @@
 </head>
 <body>
   <header class="site-header">
-    <h1>Maize Leaf Disease Detection</h1>
-    <nav>
+    <div class="brand">
+      <span class="brand-name">Maize Leaf Detection</span>
+      <span class="brand-tag">Field diagnostic tool</span>
+    </div>
+    <nav class="site-nav">
       <a href="/">Detect</a>
-      <a href="/about">About</a>
+      <a href="/about" aria-current="page">About</a>
     </nav>
   </header>
 
-  <main class="layout" style="grid-template-columns: 1fr; max-width: 720px;">
-    <section>
-      <h2>About this system</h2>
-      <p>This tool classifies photographs of maize leaves into one of four categories using a convolutional neural network trained on labelled leaf images: Northern Corn Leaf Blight, Common Rust, Gray Leaf Spot, and Healthy.</p>
+  <main class="page">
+    <section class="about-section">
+      <h2>Purpose</h2>
+      <p>This tool helps identify common maize leaf conditions from a single photograph, using a convolutional neural network trained on labelled leaf images. It's intended as a decision-support aid, not a replacement for expert diagnosis.</p>
+    </section>
 
-      <h3>How to use it</h3>
-      <p>Upload a clear, well-lit photo of a single leaf. The system works best when the leaf fills most of the frame and shows the affected area clearly.</p>
+    <section class="about-section">
+      <h2>Conditions detected</h2>
+      <ul class="condition-list">
+        <li><span class="cond-name">Northern Corn Leaf Blight</span><span class="cond-desc">Cigar-shaped grey-green lesions</span></li>
+        <li><span class="cond-name">Common Rust</span><span class="cond-desc">Reddish-brown raised pustules</span></li>
+        <li><span class="cond-name">Gray Leaf Spot</span><span class="cond-desc">Rectangular tan-grey lesions</span></li>
+        <li><span class="cond-name">Healthy</span><span class="cond-desc">No signs of the above</span></li>
+      </ul>
+    </section>
 
-      <h3>Limitations</h3>
-      <p>This is a classification aid, not a diagnostic authority. Results below the confidence threshold are flagged as inconclusive rather than shown as definitive. For agronomic decisions, consult a qualified expert.</p>
+    <section class="about-section">
+      <h2>How to get a good result</h2>
+      <p>Photograph a single leaf in good light, filling most of the frame, with the affected area (if any) clearly visible against a plain background where possible.</p>
+    </section>
+
+    <section class="about-section">
+      <h2>Limitations</h2>
+      <p>This tool is not always certain. When it isn't confident enough in a result, it will tell you instead of guessing. It also works best on maize leaves specifically, so a photo of a different plant may not be read correctly. This tool is meant to support your decisions, not replace advice from an agricultural expert, especially before using any fungicide or chemical treatment.</p>
     </section>
   </main>
 </body>

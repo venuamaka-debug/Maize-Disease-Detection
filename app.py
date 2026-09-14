@@ -1,14 +1,12 @@
 from flask import Flask, request, jsonify, render_template
 from PIL import Image, UnidentifiedImageError
 import io
-from inference import load_artifacts, predict
+from inference import load_artifacts, classify
 
 app = Flask(__name__)
 MODEL_READY = False
 MAX_FILE_SIZE = 8 * 1024 * 1024
 ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png"}
-CONFIDENCE_THRESHOLD = 0.60
-
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -44,11 +42,10 @@ def predict_route():
     except (UnidentifiedImageError, OSError):
         return jsonify({"error": "We couldn't read this image. Please try another image."}), 400
     try:
-        result = predict(img)
+        result = classify(img)
     except Exception:
         app.logger.exception("Prediction failed")
         return jsonify({"error": "The analysis could not be completed. Please try again."}), 500
-    result["inconclusive"] = result["confidence"] < CONFIDENCE_THRESHOLD
     return jsonify(result), 200
 
 if __name__ == "__main__":

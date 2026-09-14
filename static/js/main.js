@@ -1,39 +1,65 @@
 const ALLOWED_TYPES = ["image/jpeg", "image/png"];
 const MAX_SIZE = 8 * 1024 * 1024;
 
-const dropzone = document.getElementById("dropzone");
+const uploadEmpty = document.getElementById("uploadEmpty");
+const uploadFilled = document.getElementById("uploadFilled");
 const fileInput = document.getElementById("fileInput");
-const previewWrap = document.getElementById("previewWrap");
-const previewImg = document.getElementById("previewImg");
+const filledThumb = document.getElementById("filledThumb");
+const filledName = document.getElementById("filledName");
+const filledMeta = document.getElementById("filledMeta");
+const removeFileBtn = document.getElementById("removeFileBtn");
 const analyzeBtn = document.getElementById("analyzeBtn");
 const errorMsg = document.getElementById("errorMsg");
-const resultPlaceholder = document.getElementById("resultPlaceholder");
-const resultCard = document.getElementById("resultCard");
-const resultUploadedImg = document.getElementById("resultUploadedImg");
-const diagnosisBadge = document.getElementById("diagnosisBadge");
-const specimenTimestamp = document.getElementById("specimenTimestamp");
-const confidenceFill = document.getElementById("confidenceFill");
-const confidenceReadout = document.getElementById("confidenceReadout");
-const interpretation = document.getElementById("interpretation");
+const resultSection = document.getElementById("resultSection");
+const resultImg = document.getElementById("resultImg");
+const resultStatus = document.getElementById("resultStatus");
+const resultClass = document.getElementById("resultClass");
+const gaugeRow = document.getElementById("gaugeRow");
+const gauge = document.getElementById("gauge");
+const gaugePct = document.getElementById("gaugePct");
+const gaugeCaption = document.getElementById("gaugeCaption");
+const observedPattern = document.getElementById("observedPattern");
+const fieldGuidance = document.getElementById("fieldGuidance");
 const inconclusiveNote = document.getElementById("inconclusiveNote");
+const noMatchNote = document.getElementById("noMatchNote");
 const reanalyzeBtn = document.getElementById("reanalyzeBtn");
 
 let selectedFile = null;
 
-const INTERPRETATIONS = {
-  Northern_Corn_Leaf_Blight: "Long, cigar-shaped grey-green lesions are consistent with Northern Corn Leaf Blight. Consider consulting a local agronomist about fungicide timing.",
-  Common_Rust: "Small reddish-brown pustules on both leaf surfaces are consistent with Common Rust.",
-  Gray_Leaf_Spot: "Rectangular tan-to-grey lesions running parallel to leaf veins are consistent with Gray Leaf Spot.",
-  Healthy: "No visible signs of the diseases this system checks for were detected in this leaf."
+const CONTENT = {
+  Northern_Corn_Leaf_Blight: {
+    label: "Northern Corn Leaf Blight",
+    pattern: "Long, cigar-shaped grey-green lesions running parallel to the leaf's length.",
+    guidance: "Consider consulting a local agronomist about fungicide timing and resistant hybrids for future planting."
+  },
+  Common_Rust: {
+    label: "Common Rust",
+    pattern: "Small, reddish-brown raised pustules scattered across both leaf surfaces.",
+    guidance: "Monitor spread across the field. Severe early-season infections may warrant a fungicide application."
+  },
+  Gray_Leaf_Spot: {
+    label: "Gray Leaf Spot",
+    pattern: "Rectangular tan-to-grey lesions bounded by leaf veins, often starting on lower leaves.",
+    guidance: "Check lower canopy leaves across the field, as this condition typically progresses upward."
+  },
+  Healthy: {
+    label: "Healthy",
+    pattern: "No lesions, discoloration, or pustules consistent with the conditions this system checks for.",
+    guidance: "Continue routine monitoring, particularly after periods of high humidity or rainfall."
+  }
 };
 
 function showError(msg) { errorMsg.textContent = msg; errorMsg.classList.add("active"); }
 function clearError() { errorMsg.textContent = ""; errorMsg.classList.remove("active"); }
 
 function validateFile(file) {
-  if (!ALLOWED_TYPES.includes(file.type)) return "This file type is not supported. Please upload a JPG, JPEG or PNG image.";
-  if (file.size > MAX_SIZE) return "The selected image is too large. Please choose a smaller image.";
+  if (!ALLOWED_TYPES.includes(file.type)) return "This file type isn't supported. Please upload a JPG, JPEG or PNG image.";
+  if (file.size > MAX_SIZE) return "That image is too large. Please choose a file under 8 MB.";
   return null;
+}
+
+function formatSize(bytes) {
+  return bytes > 1024 * 1024 ? (bytes / (1024 * 1024)).toFixed(1) + " MB" : Math.round(bytes / 1024) + " KB";
 }
 
 function handleFile(file) {
@@ -41,30 +67,58 @@ function handleFile(file) {
   const err = validateFile(file);
   if (err) { showError(err); return; }
   selectedFile = file;
-  previewImg.src = URL.createObjectURL(file);
-  previewWrap.classList.add("active");
+  const url = URL.createObjectURL(file);
+  filledThumb.src = url;
+
+  const tempImg = new Image();
+  tempImg.onload = () => {
+    filledMeta.textContent = `${tempImg.naturalWidth}×${tempImg.naturalHeight} · ${formatSize(file.size)}`;
+  };
+  tempImg.src = url;
+
+  filledName.textContent = file.name;
+  uploadEmpty.style.display = "none";
+  uploadFilled.classList.add("active");
   analyzeBtn.disabled = false;
 }
 
-dropzone.addEventListener("click", () => fileInput.click());
-dropzone.addEventListener("dragover", (e) => { e.preventDefault(); dropzone.classList.add("dragover"); });
-dropzone.addEventListener("dragleave", () => dropzone.classList.remove("dragover"));
-dropzone.addEventListener("drop", (e) => {
+function resetUpload() {
+  selectedFile = null;
+  fileInput.value = "";
+  uploadFilled.classList.remove("active");
+  uploadEmpty.style.display = "block";
+  analyzeBtn.disabled = true;
+  clearError();
+}
+
+uploadEmpty.addEventListener("click", (e) => { if (e.target.id !== "cameraBtn") fileInput.click(); });
+const cameraBtn = document.getElementById("cameraBtn");
+const cameraInput = document.getElementById("cameraInput");
+if (cameraBtn) {
+  cameraBtn.addEventListener("click", (e) => { e.stopPropagation(); cameraInput.click(); });
+  cameraInput.addEventListener("change", (e) => { e.stopPropagation(); if (cameraInput.files.length) handleFile(cameraInput.files[0]); });
+}
+uploadEmpty.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fileInput.click(); } });
+uploadEmpty.addEventListener("dragover", (e) => { e.preventDefault(); uploadEmpty.classList.add("dragover"); });
+uploadEmpty.addEventListener("dragleave", () => uploadEmpty.classList.remove("dragover"));
+uploadEmpty.addEventListener("drop", (e) => {
   e.preventDefault();
-  dropzone.classList.remove("dragover");
+  uploadEmpty.classList.remove("dragover");
   if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
 });
 fileInput.addEventListener("change", () => { if (fileInput.files.length) handleFile(fileInput.files[0]); });
+removeFileBtn.addEventListener("click", resetUpload);
 
 analyzeBtn.addEventListener("click", async () => {
   if (!selectedFile) { showError("Please select an image before continuing."); return; }
   clearError();
   analyzeBtn.disabled = true;
-  analyzeBtn.textContent = "Analyzing...";
+  analyzeBtn.classList.add("loading");
+  analyzeBtn.textContent = "Analyzing leaf image…";
 
   const formData = new FormData();
   formData.append("image", selectedFile);
-  const imgSrcForResult = previewImg.src;
+  const imgSrc = filledThumb.src;
 
   try {
     const res = await fetch("/predict", { method: "POST", body: formData });
@@ -72,54 +126,78 @@ analyzeBtn.addEventListener("click", async () => {
     if (!res.ok) {
       showError(data.error || "The analysis could not be completed. Please try again.");
     } else {
-      displayResult(data, imgSrcForResult);
-      // Clear the left-column preview once the result plate on the right takes over —
-      // one image doing one job, not the same leaf shown twice.
-      previewWrap.classList.remove("active");
-      fileInput.value = "";
-      selectedFile = null;
+      displayResult(data, imgSrc);
     }
   } catch (e) {
-    showError("The analysis could not be completed. Please try again.");
+    showError("The analysis could not be completed. Please check your connection and try again.");
   }
-  analyzeBtn.disabled = true;
-  analyzeBtn.textContent = "Analyze";
+
+  analyzeBtn.classList.remove("loading");
+  analyzeBtn.textContent = "Analyze leaf";
+  analyzeBtn.disabled = false;
 });
 
+function resetResultPanels() {
+  gaugeRow.style.display = "none";
+  inconclusiveNote.classList.remove("active");
+  noMatchNote.classList.remove("active");
+  observedPattern.closest(".result-section").style.display = "none";
+  fieldGuidance.closest(".result-section").style.display = "none";
+}
+
 function displayResult(data, imgSrc) {
-  resultPlaceholder.style.display = "none";
-  resultCard.classList.add("active");
-  resultUploadedImg.src = imgSrc;
-  specimenTimestamp.textContent = new Date().toLocaleString([], { dateStyle: "medium", timeStyle: "short" });
+  resultImg.src = imgSrc;
+  resetResultPanels();
+
+  if (data.status === "no_match") {
+    resultClass.className = "no-match";
+    resultClass.textContent = "No match found";
+    resultStatus.textContent = "This doesn't appear to be a maize leaf";
+    noMatchNote.classList.add("active");
+    noMatchNote.textContent = "The image doesn't resemble a maize leaf closely enough to analyze. Try a clear, well-lit photo of a single leaf.";
+    resultSection.hidden = false;
+    resultSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    return;
+  }
 
   const isHealthy = data.predicted_class === "Healthy";
-  const label = data.inconclusive ? "Inconclusive" : data.predicted_class.replace(/_/g, " ");
-  diagnosisBadge.textContent = label;
-  diagnosisBadge.className = "diagnosis-badge " + (data.inconclusive ? "inconclusive" : (isHealthy ? "healthy" : "disease"));
-
+  const info = CONTENT[data.predicted_class] || { label: data.predicted_class, pattern: "", guidance: "" };
   const pct = Math.round(data.confidence * 100);
-  confidenceFill.className = "confidence-fill " + (isHealthy ? "healthy" : "");
-  requestAnimationFrame(() => { confidenceFill.style.width = pct + "%"; });
-  confidenceReadout.textContent = `${pct}% confidence`;
 
-  if (data.inconclusive) {
+  gaugeRow.style.display = "flex";
+
+  if (data.status === "unrecognised") {
+    resultClass.className = "unrecognised";
+    resultClass.textContent = "Unrecognised";
+    resultStatus.textContent = "Leaf detected, but condition unclear";
+    gauge.style.setProperty("--gauge-color", "var(--amber)");
+    gauge.style.setProperty("--pct", 0);
+    requestAnimationFrame(() => { gauge.style.setProperty("--pct", pct); });
+    gaugePct.textContent = pct + "%";
+    gaugeCaption.innerHTML = `<strong>${pct}%</strong> best-guess confidence`;
     inconclusiveNote.classList.add("active");
-    inconclusiveNote.textContent = "This result falls below the confidence threshold. Consider retaking the photo in better lighting or from a closer angle.";
-    interpretation.textContent = "";
+    inconclusiveNote.textContent = "This looks like a leaf, but the model isn't confident enough to name a condition. Try retaking the photo with better lighting, closer framing, or a plainer background.";
   } else {
-    inconclusiveNote.classList.remove("active");
-    interpretation.textContent = INTERPRETATIONS[data.predicted_class] || "";
+    resultClass.className = isHealthy ? "healthy" : "disease";
+    resultClass.textContent = info.label;
+    resultStatus.textContent = isHealthy ? "No condition detected" : "Condition detected";
+    const gaugeColor = isHealthy ? "var(--leaf)" : "var(--clay)";
+    gauge.style.setProperty("--gauge-color", gaugeColor);
+    gauge.style.setProperty("--pct", 0);
+    requestAnimationFrame(() => { gauge.style.setProperty("--pct", pct); });
+    gaugePct.textContent = pct + "%";
+    gaugeCaption.innerHTML = `<strong>${pct}%</strong> model confidence`;
+    observedPattern.closest(".result-section").style.display = "block";
+    fieldGuidance.closest(".result-section").style.display = "block";
+    observedPattern.textContent = info.pattern;
+    fieldGuidance.textContent = info.guidance;
   }
+
+  resultSection.hidden = false;
+  resultSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
 reanalyzeBtn.addEventListener("click", () => {
-  selectedFile = null;
-  fileInput.value = "";
-  previewWrap.classList.remove("active");
-  analyzeBtn.disabled = true;
-  analyzeBtn.textContent = "Analyze";
-  resultCard.classList.remove("active");
-  resultPlaceholder.style.display = "block";
-  confidenceFill.style.width = "0%";
-  clearError();
+  resetUpload();
+  resultSection.hidden = true;
 });

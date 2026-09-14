@@ -8,73 +8,80 @@
 </head>
 <body>
   <header class="site-header">
-    <div>
-      <h1>Maize Leaf Disease Detection</h1>
-      <span class="tagline">A field reference for four leaf conditions</span>
+    <div class="brand">
+      <span class="brand-name">Maize Leaf Detection</span>
+      <span class="brand-tag">Field diagnostic tool</span>
     </div>
-    <nav>
-      <a href="/">Detect</a>
+    <nav class="site-nav">
+      <a href="/" aria-current="page">Detect</a>
       <a href="/about">About</a>
     </nav>
   </header>
 
-  <main class="layout">
-    <section class="panel-intro">
-      <p>Upload a photo of a maize leaf to check for Northern Corn Leaf Blight, Common Rust, and Gray Leaf Spot.</p>
-
-      <ul class="spec-list">
-        <li><span>Formats</span><span>JPG, JPEG, PNG</span></li>
-        <li><span>Max size</span><span>8 MB</span></li>
-        <li><span>Conditions checked</span><span>4</span></li>
-      </ul>
-
-      <div class="dropzone" id="dropzone">
-        <strong>Upload a leaf image</strong>
-        <p>Click to browse, or drag an image here</p>
-        <input type="file" id="fileInput" accept="image/jpeg,image/png">
-      </div>
-
-      <div class="preview-wrap" id="previewWrap">
-        <img id="previewImg" alt="Selected leaf preview">
-      </div>
-
-      <div class="error-msg" id="errorMsg"></div>
-
-      <button class="analyze" id="analyzeBtn" disabled>Analyze</button>
+  <main class="page">
+    <section class="intro">
+      <h1>Identify maize leaf conditions from a photograph.</h1>
+      <p>Upload a clear photo of a single leaf. This tool checks for three common conditions and healthy leaves.</p>
     </section>
 
-    <section class="result-area">
-      <div class="result-placeholder" id="resultPlaceholder">
-        Results will appear here once you analyze a leaf image.
+    <section class="workspace">
+      <div class="upload-panel">
+        <div class="upload-empty" id="uploadEmpty" role="button" tabindex="0" aria-label="Upload a maize leaf photograph">
+          <h3>Upload a maize leaf photograph</h3>
+          <p>Click to browse, or drag an image here</p>
+          <input type="file" id="fileInput" accept="image/jpeg,image/png">
+        </div>
+
+        <div class="upload-filled" id="uploadFilled">
+          <img id="filledThumb" alt="Selected leaf">
+          <div class="upload-filled-info">
+            <div class="filename" id="filledName"></div>
+            <div class="filemeta" id="filledMeta"></div>
+          </div>
+          <button class="remove-file" id="removeFileBtn" type="button">Remove</button>
+        </div>
       </div>
 
-      <div class="result-card" id="resultCard">
-        <div class="specimen-plate">
-          <img id="resultUploadedImg" alt="Analyzed leaf">
-          <div class="specimen-caption">
-            <span class="mono-label">SAMPLE — 224×224</span>
-            <span class="mono-label" id="specimenTimestamp"></span>
-          </div>
+      <div class="workspace-meta">
+        <span>JPG, JPEG or PNG · up to 8 MB</span>
+        <span>4 conditions evaluated</span>
+      </div>
+
+      <div class="error-msg" id="errorMsg" role="alert"></div>
+
+      <button class="analyze-btn" id="analyzeBtn" disabled type="button">Analyze leaf</button>
+    </section>
+
+    <section class="result" id="resultSection" hidden aria-live="polite">
+      <div class="result-grid">
+        <div class="result-image">
+          <img id="resultImg" alt="Analyzed maize leaf">
         </div>
+        <div class="result-body">
+          <span class="result-status" id="resultStatus"></span>
+          <h2 id="resultClass"></h2>
 
-        <div class="diagnosis-row">
-          <span class="diagnosis-badge" id="diagnosisBadge"></span>
-        </div>
-
-        <div class="confidence-meter">
-          <div class="confidence-track">
-            <div class="confidence-fill" id="confidenceFill"></div>
+          <div class="gauge-row" id="gaugeRow">
+            <div class="gauge" id="gauge">
+              <span class="gauge-pct" id="gaugePct"></span>
+            </div>
+            <span class="gauge-caption" id="gaugeCaption"></span>
           </div>
-          <div class="confidence-ticks">
-            <span>0</span><span>25</span><span>50</span><span>75</span><span>100</span>
+
+          <div class="no-match-note" id="noMatchNote"></div>
+          <div class="inconclusive-note" id="inconclusiveNote"></div>
+
+          <div class="result-section">
+            <h3>Observed pattern</h3>
+            <p id="observedPattern"></p>
           </div>
-          <div class="confidence-readout" id="confidenceReadout"></div>
+          <div class="result-section">
+            <h3>Field guidance</h3>
+            <p id="fieldGuidance"></p>
+          </div>
+
+          <button class="reanalyze" id="reanalyzeBtn" type="button">Analyze another image</button>
         </div>
-
-        <div class="inconclusive-note" id="inconclusiveNote"></div>
-        <p class="interpretation" id="interpretation"></p>
-
-        <button class="reanalyze" id="reanalyzeBtn">Analyze another image</button>
       </div>
     </section>
   </main>
