@@ -2,8 +2,27 @@ import numpy as np
 from PIL import Image
 import tensorflow as tf
 from tensorflow.keras.models import load_model
+import os
+import urllib.request
 
 MODEL_PATH = "model/production_model.h5"
+MODEL_URL = "https://huggingface.co/Venuamaka/maize-resnet50/resolve/main/production_model.h5"
+
+def ensure_model_downloaded():
+    """
+    Render's free tier has an ephemeral filesystem — anything not in
+    git is wiped on redeploy. The model file (93MB) is intentionally
+    excluded from git (see .gitignore) since it exceeds sensible repo
+    size limits. Instead it's hosted on Hugging Face's model hub and
+    downloaded here on first run if not already present locally.
+    """
+    if os.path.exists(MODEL_PATH):
+        print(f"Model already present at {MODEL_PATH}, skipping download.")
+        return
+    os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
+    print(f"Model not found locally — downloading from {MODEL_URL} ...")
+    urllib.request.urlretrieve(MODEL_URL, MODEL_PATH)
+    print("Model download complete.")
 IMG_SIZE = (224, 224)  # confirmed: image.target_size in config_snapshot.yaml
 
 # Confirmed from src/config/settings.py:unified_classes — derived from
@@ -30,6 +49,7 @@ _model = None
 
 def load_artifacts():
     global _model
+    ensure_model_downloaded()
     _model = load_model(MODEL_PATH, custom_objects=CUSTOM_OBJECTS, safe_mode=False)
     return _model is not None
 
