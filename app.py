@@ -48,6 +48,12 @@ def predict_route():
         return jsonify({"error": "The analysis could not be completed. Please try again."}), 500
     return jsonify(result), 200
 
+# Load the model at import time, not just under __main__ — gunicorn
+# imports this module rather than executing it directly, so code
+# inside `if __name__ == "__main__":` never runs under gunicorn.
+# This caused every /predict request to fail with "Model not loaded"
+# on Render, since load_artifacts() was never actually called.
+MODEL_READY = load_artifacts()
+
 if __name__ == "__main__":
-    MODEL_READY = load_artifacts()
     app.run(debug=True, host="0.0.0.0", port=5000)
